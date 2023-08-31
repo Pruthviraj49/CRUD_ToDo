@@ -52,6 +52,27 @@ app.delete("/delete/:id", async (req, res) => {
   res.send("Deleted");
 });
 
+app.put("/update/:id", async (req, res) => {
+  const id = req.params.id;
+  const { title, desp } = req.body;
+
+  try {
+    const updatedNote = await NotesModel.findByIdAndUpdate(id, {
+      title: title,
+      desp: desp,
+    });
+
+    if (!updatedNote) {
+      return res.status(404).send("Item not found.");
+    }
+
+    res.status(200).send("Item updated successfully.");
+  } catch (error) {
+    console.error("Error updating item:", error);
+    res.status(500).send("An error occurred while updating the item.");
+  }
+});
+
 app.listen(3001, () => {
   console.log("Sever is running on port 3001");
 });
